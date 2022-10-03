@@ -83,7 +83,35 @@ def dominates1(g, i, a, b):
 
 
 def dominated1(g):
-    return 0
+    """
+    Returns the strictly dominant actions in the game.
+
+            Parameters:
+                    g (tuple): Tuple containing action set and payoff matrix.
+        
+            Returns:
+                    list: Returns the strictly dominant actions in the game as a list of tuples.
+
+    """
+    possible_args =[]
+    dominated_pairs =[]
+    
+    for i in range(len(g[0])):
+        for j in range(len(g[0][i])): 
+            for k in range(len(g[0][i])):
+                if j!=k:
+                    possible_args.append((i, g[0][i][j], g[0][i][k]))
+                        
+    for action in possible_args:
+        if dominates1(g1, action[0], action[1], action[2]) is True:
+            
+            dominated_pairs.append((action[0], action[2], action[1]))
+
+    for i in range(len(dominated_pairs)-1):
+        if dominated_pairs[i][0] == dominated_pairs[i+1][0]: 
+            dominated_pairs.pop()   
+    
+    return dominated_pairs
 
 
 def reduce(g, i, a):
@@ -102,8 +130,11 @@ def eisds2(g):
     return 0
 
 """ Tests for dominates1 """
-print(dominates1(g1, 0, 'a0', 'a0'))
-print(dominates1(g1, 0, 'a0', 'a1'))
-print(dominates1(g1, 0, 'a1', 'a0'))
-print(dominates1(g1, 2, 'c0', 'c1'))
-print(dominates1(g1, 2, 'c1', 'c2'))
+# print(dominates1(g1, 0, 'a0', 'a0'))
+# print(dominates1(g1, 0, 'a0', 'a1'))
+# print(dominates1(g1, 0, 'a1', 'a0'))
+# print(dominates1(g1, 2, 'c0', 'c1'))
+# print(dominates1(g1, 2, 'c1', 'c2'))
+
+""" Tests for dominated1 """
+# print(dominated1(g1))
