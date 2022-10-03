@@ -20,28 +20,20 @@ actions = [["a0", "a1"], ["b0", "b1", "b2"], ["c0", "c1", "c2"]]
 g1 = (actions, m)
 
 
-def cataloger(a):
+def cataloger(g, a):
     """
     Returns integer index for a given string action.
 
             Parameters:
-                    a (string): action
+                    g (tuple): Tuple containing action set and payoff matrix.
+                    a (string): action.
             Returns:
                     int: index of the action.
     """
-    loc = 0
-
-    if "b" in a:
-        loc += 10
-    elif "c" in a:
-        loc += 20
-
-    if "1" in a:
-        loc += 1
-    elif "2" in a:
-        loc += 2
-    
-    return loc
+    for i in range(len(g[0])):
+        for j in range(len(g[0][i])):
+            if a is g[0][i][j]:
+                return (10*i + j)
 
 
 def getPayoff(g, i, a):
@@ -51,11 +43,11 @@ def getPayoff(g, i, a):
             Parameters:
                     g (tuple): Tuple containing action set and payoff matrix.
                     i (int): Player ID.
-                    a (string): action
+                    a (string): action.
             Returns:
                     array: Returns a numpy nd array containing payoff values.
     """
-    loc = cataloger(a)
+    loc = cataloger(g, a)
     if loc // 10 == 0:
         return g[1][loc % 10, :, :, i]
     if loc // 10 == 1:
@@ -110,8 +102,8 @@ def eisds2(g):
     return 0
 
 """ Tests for dominates1 """
-# print(dominates1(g1, 0, 'a0', 'a0'))
-# print(dominates1(g1, 0, 'a0', 'a1'))
-# print(dominates1(g1, 0, 'a1', 'a0'))
-# print(dominates1(g1, 2, 'c0', 'c1'))
-# print(dominates1(g1, 2, 'c1', 'c2'))
+print(dominates1(g1, 0, 'a0', 'a0'))
+print(dominates1(g1, 0, 'a0', 'a1'))
+print(dominates1(g1, 0, 'a1', 'a0'))
+print(dominates1(g1, 2, 'c0', 'c1'))
+print(dominates1(g1, 2, 'c1', 'c2'))
