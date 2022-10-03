@@ -21,36 +21,47 @@ g1 = (actions, m)
 
 
 def cataloger(a):
+    """
+    Returns integer index for a given string action.
 
+            Parameters:
+                    a (string): action
+            Returns:
+                    int: index of the action.
+    """
     loc = 0
 
-    if "a" in a:
-        loc += 0
-    elif "b" in a:
+    if "b" in a:
         loc += 10
     elif "c" in a:
         loc += 20
 
-    if "0" in a:
-        loc += 0
-    elif "1" in a:
+    if "1" in a:
         loc += 1
     elif "2" in a:
         loc += 2
-
+    
     return loc
 
 
 def getPayoff(g, i, a):
+    """
+    Returns payoff values for a given player in a given action from the payoff matrix.
 
+            Parameters:
+                    g (tuple): Tuple containing action set and payoff matrix.
+                    i (int): Player ID.
+                    a (string): action
+            Returns:
+                    array: Returns a numpy nd array containing payoff values.
+    """
     loc = cataloger(a)
-    if loc / 10 == 0:
-        return g1[1][loc % 10, :, :, i]
-    elif loc / 10 == 1:
-        return g1[1][:, loc % 10, :, i]
-    elif loc / 10 == 2:
-        return g1[1][:, :, loc % 10, i]
-
+    if loc // 10 == 0:
+        return g[1][loc % 10, :, :, i]
+    if loc // 10 == 1:
+        return g[1][:, loc % 10, :, i]
+    if loc // 10 == 2:
+        return g[1][:, :, loc % 10, i]
 
 def dominates1(g, i, a, b):
     """
@@ -64,9 +75,19 @@ def dominates1(g, i, a, b):
             Returns:
                     bool: The return value. True for success, False otherwise.
     """
-    loca = cataloger(a)
-    locb = cataloger(b)
-    return False
+    payoffa = getPayoff(g, i, a)
+    payoffb = getPayoff(g, i, b)
+    dom_check = 0
+    for i in range(payoffa.shape[0]):
+        for j in range(payoffa.shape[1]):
+            if payoffa[i][j] < payoffb[i][j]:
+                return False
+            if payoffa[i][j] > payoffb[i][j]:
+                dom_check = 1
+    if dom_check != 0:        
+        return True
+    else:
+        return False
 
 
 def dominated1(g):
@@ -88,9 +109,9 @@ def dominated2(g):
 def eisds2(g):
     return 0
 
-
-print(g1[1][1][0])
-print(g1[0])
-print(cataloger("b2"))
-
-print(g1[1][:, 0, :, 1])
+""" Tests for dominates1 """
+# print(dominates1(g1, 0, 'a0', 'a0'))
+# print(dominates1(g1, 0, 'a0', 'a1'))
+# print(dominates1(g1, 0, 'a1', 'a0'))
+# print(dominates1(g1, 2, 'c0', 'c1'))
+# print(dominates1(g1, 2, 'c1', 'c2'))
