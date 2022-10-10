@@ -137,8 +137,22 @@ def reduce(g, i, a):
     return ( (action_temp, np.delete(g[1],[loc % 10], axis = i))) 
     
 
-def iesds(g):
-    return 0
+def iesds1(g):
+    """
+    Returns Tuple containing reduced action set and reduced payoff matrix 
+    based on a simplified version of Iterated Elimination of Strictly 
+    Dominated Strategies (IESDS).
+
+            Parameters:
+                    g (tuple): Tuple containing action set and payoff matrix.
+            Returns:
+                    tuple: Reduced action set and reduced payoff matrix.
+    """
+    dominated_pairs = dominated1(g)
+    g_temp = cp.deepcopy(g)
+    for i in dominated_pairs:
+        g_temp = reduce(g_temp, i[0], i[1])
+    return (dominated_pairs, g_temp)
 
 
 def dominated2(g):
@@ -156,10 +170,13 @@ def eisds2(g):
 # print(dominates1(g1, 2, 'c1', 'c2'))
 
 """ Tests for dominated1 """
-# print(dominated1(g1))
+#print(dominated1(g1))
 
 """ Tests for reduce """
 # print(reduce(g1, 2, 'c2'))
 # g2 = reduce(g1, 2, 'c2')
 # print( reduce(g2, 0,'a0'))
 
+
+""" Tests for iesds1"""
+# print(iesds1(g1))
