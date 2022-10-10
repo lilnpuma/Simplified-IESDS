@@ -4,7 +4,9 @@ any unauthorized assistance on this project.
 Manu Madhu Pillai
 """
 
+from nis import cat
 import numpy as np
+import copy as cp
 
 m00 = np.array([[1, 3, 1], [2, 0, 1], [3, 0, 0]])
 m01 = np.array([[2, 1, 1], [1, 1, 1], [2, 5, 0]])
@@ -76,7 +78,7 @@ def dominates1(g, i, a, b):
                 return False
             if payoffa[i][j] > payoffb[i][j]:
                 dom_check = 1
-    if dom_check != 0:        
+    if dom_check != 0:
         return True
     else:
         return False
@@ -88,35 +90,52 @@ def dominated1(g):
 
             Parameters:
                     g (tuple): Tuple containing action set and payoff matrix.
-        
+
             Returns:
                     list: Returns the strictly dominant actions in the game as a list of tuples.
 
     """
     possible_args =[]
     dominated_pairs =[]
-    
+
     for i in range(len(g[0])):
-        for j in range(len(g[0][i])): 
+        for j in range(len(g[0][i])):
             for k in range(len(g[0][i])):
                 if j!=k:
                     possible_args.append((i, g[0][i][j], g[0][i][k]))
-                        
+
     for action in possible_args:
         if dominates1(g1, action[0], action[1], action[2]) is True:
-            
+
             dominated_pairs.append((action[0], action[2], action[1]))
 
     for i in range(len(dominated_pairs)-1):
-        if dominated_pairs[i][0] == dominated_pairs[i+1][0]: 
-            dominated_pairs.pop()   
-    
+        if dominated_pairs[i][0] == dominated_pairs[i+1][0]:
+            dominated_pairs.pop()
+
     return dominated_pairs
 
 
 def reduce(g, i, a):
-    return 0
+    """
+    Returns Tuple containing reduced action set and reduced payoff matrix.
 
+            Parameters:
+                    g (tuple): Tuple containing action set and payoff matrix.
+                    i (int): Player ID.
+                    a (string): Action to be reduced.
+            Returns:
+                    tuple: Reduced action set and reduced payoff matrix.
+    """
+
+    action_temp = cp.deepcopy(g[0])
+    loc = cataloger(g, a)
+    if loc // 10 is not i:
+        print("Error, player doesnt correspond to action.")
+        return -1
+    action_temp[loc // 10].pop(loc % 10)    
+    return ( (action_temp, np.delete(g[1],[loc % 10], axis = i))) 
+    
 
 def iesds(g):
     return 0
@@ -138,3 +157,9 @@ def eisds2(g):
 
 """ Tests for dominated1 """
 # print(dominated1(g1))
+
+""" Tests for reduce """
+# print(reduce(g1, 2, 'c2'))
+# g2 = reduce(g1, 2, 'c2')
+# print( reduce(g2, 0,'a0'))
+
